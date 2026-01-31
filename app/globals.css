@@ -1,0 +1,45 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: 0 0 0;
+    --color-secondary: 107 114 128;
+    --color-background: 255 255 255;
+    --color-background-light: 249 250 251;
+    --color-accent-positive: 16 185 129;
+    --color-accent-negative: 239 68 68;
+  }
+
+  * {
+    @apply border-gray-200;
+  }
+
+  body {
+    @apply bg-background text-primary font-sans antialiased;
+  }
+
+  /* Accessibility: visible focus indicators */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-primary ring-offset-2;
+  }
+
+  /* Respect prefers-reduced-motion */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Touch target minimum size enforcement */
+  .touch-target {
+    @apply min-h-touch min-w-touch;
+  }
+}

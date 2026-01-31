@@ -29,10 +29,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body className={inter.className}>
-        {children}
-        <Navbar />
+    <html lang="fr" className="h-full overflow-hidden">
+      <body className={`${inter.className} h-full overflow-hidden`}>
+        <div className="h-full flex flex-col">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden pb-16">
+            {children}
+          </div>
+          <Navbar />
+        </div>
       </body>
     </html>
   );

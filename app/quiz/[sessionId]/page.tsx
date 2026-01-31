@@ -44,26 +44,13 @@ export default function QuizPage() {
     // Reset question start time when moving to next question
     setQuestionStartTime(Date.now());
     setSelectedAnswer(null);
-
-    // Cleanup any pending timeouts when question changes
-    return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
   }, [currentQuestion]);
 
-  const handleAnswer = useCallback((selectedIndex: number) => {
-    // Prevent race condition if already answered
-    if (selectedAnswer !== null) return;
+  // Auto-advance effect when answer is selected
+  useEffect(() => {
+    if (selectedAnswer === null) return;
 
-    const isCorrect = selectedIndex === currentQ.correctIndex;
-    setSelectedAnswer({ index: selectedIndex, isCorrect });
-
-    answerQuestion(currentQ.id, selectedIndex, currentQ.correctIndex);
-
-    // Auto-advance after delay
-    timeoutRef.current = setTimeout(() => {
+    const timeoutId = setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
         nextQuestion();
       } else {
@@ -71,23 +58,27 @@ export default function QuizPage() {
         router.push("/resultats");
       }
     }, AUTO_ADVANCE_DELAY);
-  }, [selectedAnswer, currentQ, answerQuestion, currentQuestion, questions.length, nextQuestion, router]);
 
-  const handleTimerExpire = useCallback(() => {
+    return () => clearTimeout(timeoutId);
+  }, [selectedAnswer, currentQuestion, questions.length, nextQuestion, router]);
+
+  const handleAnswer = (selectedIndex: number) => {
+    // Prevent race condition if already answered
+    if (selectedAnswer !== null) return;
+
+    const isCorrect = selectedIndex === currentQ.correctIndex;
+    setSelectedAnswer({ index: selectedIndex, isCorrect });
+
+    answerQuestion(currentQ.id, selectedIndex, currentQ.correctIndex);
+  };
+
+  const handleTimerExpire = () => {
     if (isAnswering || selectedAnswer !== null) return; // Already answered
 
     // Auto-select no answer (mark as incorrect)
     answerQuestion(currentQ.id, -1, currentQ.correctIndex);
     setSelectedAnswer({ index: -1, isCorrect: false });
-
-    timeoutRef.current = setTimeout(() => {
-      if (currentQuestion < questions.length - 1) {
-        nextQuestion();
-      } else {
-        router.push("/resultats");
-      }
-    }, AUTO_ADVANCE_DELAY);
-  }, [isAnswering, selectedAnswer, answerQuestion, currentQ, currentQuestion, questions.length, nextQuestion, router]);
+  };
 
   if (!currentQ) {
     return null;

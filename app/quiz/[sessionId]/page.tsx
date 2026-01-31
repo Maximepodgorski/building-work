@@ -106,6 +106,7 @@ export default function QuizPage() {
 
         {/* Question */}
         <QuestionCard
+          key={currentQ.id}
           question={currentQ.question}
           options={currentQ.options}
           onAnswer={handleAnswer}

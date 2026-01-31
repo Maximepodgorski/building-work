@@ -1,8 +1,10 @@
 ---
 title: Playful Functional Feedback Animations
-status: active
+status: shipped
 created: 2026-01-31
+shipped: 2026-01-31
 estimate: 2h
+actual: 1h
 tier: mini
 ---
 
@@ -105,13 +107,13 @@ EC4. Touch vs mouse: Hover animations skip on touch devices (use @media (hover: 
 
 ## Scope
 
-- [ ] 1. Create playful spring/bounce keyframes in globals.css (spring-scale, bounce-shake) → AC-1, AC-E3
-- [ ] 2. Add Button playful press animation (spring scale to 0.95) → AC-1
-- [ ] 3. Add Input playful error shake with bounce → AC-E3
-- [ ] 4. Add QuestionCard playful selection animation (spring background fill) → AC-2
-- [ ] 5. Add Timer color transition to red at 10s (smooth, no pulse) → AC-3
-- [ ] 6. Verify prefers-reduced-motion override applies to all new animations → AC-E1
-- [ ] 7. Test GPU acceleration (DevTools performance tab, no layout warnings) → AC-4, AC-E2
+- [x] 1. Create playful spring/bounce keyframes in globals.css (spring-scale, bounce-shake) → AC-1, AC-E3
+- [x] 2. Add Button playful press animation (spring scale to 0.95) → AC-1
+- [x] 3. Add Input playful error shake with bounce → AC-E3
+- [x] 4. Add QuestionCard playful selection animation (spring background fill) → AC-2
+- [x] 5. Add Timer color transition to red at 10s (smooth, no pulse) → AC-3
+- [x] 6. Verify prefers-reduced-motion override applies to all new animations → AC-E1
+- [x] 7. Test GPU acceleration (DevTools performance tab, no layout warnings) → AC-4, AC-E2
 
 ### Out of Scope (per user decision to focus on functional feedback only)
 
@@ -223,6 +225,32 @@ N/A — animations are stateless CSS/framer-motion effects, no state machine nee
 
 **Rationale:** Timed quiz context benefits from responsive functional feedback without decorative distractions. Playful spring/bounce effects on interactions create delight without consuming user's time budget or adding cognitive load.
 
+---
+
+### Ship Retro (2026-01-31)
+
+**Estimate vs Actual:** 2h → 1h (50% faster)
+
+**What worked:**
+- **Adversarial spec analysis prevented scope creep:** UX Designer, Skeptic, and Performance Engineer perspectives unanimously recommended reframing from 11-item decorative animations to 4-item functional feedback. User clarification upfront (playful + Option A) saved 3h+ of wasted implementation.
+- **CSS-first strategy:** Using CSS keyframes with cubic-bezier spring easing instead of framer-motion kept bundle size unchanged and performance optimal. GPU-accelerated properties only (transform, opacity, color).
+- **Existing prefers-reduced-motion override:** globals.css already had comprehensive accessibility coverage (lines 29-37), no additional work needed.
+- **Playful bounce easing:** `cubic-bezier(0.34, 1.56, 0.64, 1)` created genuinely playful feel without being cartoonish. Perfect for quiz app context.
+
+**What didn't:**
+- **Initial spec was off-target:** Original spec included entrance animations, hover states, and staggers that would have hurt UX during timed quiz. Analysis caught this, but ideally should have validated user needs before writing full spec.
+- **File modification conflicts:** Had to re-read files 3 times due to linter auto-formatting between read/edit. Not blocking but slowed iteration slightly.
+
+**Next time:**
+- For "friendly/polished/delightful" requests, **clarify examples upfront** before spec generation. Ask: "What specific interactions should feel different?"
+- For animation features, **validate context first:** time-sensitive apps (quizzes, checkouts) need different animation strategy than exploratory apps (portfolios, marketing sites).
+- Consider creating **animation vocabulary template** for reuse: define spring/ease curves, duration ranges, and when to use each pattern.
+
+**Learnings:**
+- Playful ≠ more animations. Playful = satisfying micro-feedback at key moments.
+- Timed contexts benefit from instant primary actions + playful secondary feedback (errors, confirmations).
+- CSS keyframes with bounce easing (cubic-bezier 1.5+) feel more playful than linear or standard ease curves.
+
 ## Progress
 
 | # | Scope Item | Status | Iteration |
@@ -242,6 +270,7 @@ N/A — animations are stateless CSS/framer-motion effects, no state machine nee
 | plan | 2026-01-31T00:00:00Z | - | Created |
 | ship | 2026-01-31T00:00:00Z | - | Started - scope reduced to functional feedback only |
 | ship-complete | 2026-01-31T00:00:00Z | ~1h | All ACs passing, build successful |
+| done | 2026-01-31T00:00:00Z | 1h | Validated, retro complete, ready to archive |
 
 ## Implementation Summary
 

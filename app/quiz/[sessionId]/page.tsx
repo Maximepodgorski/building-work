@@ -113,22 +113,26 @@ export default function QuizPage() {
           />
         </div>
 
-        {/* Question Card with Gradient Background */}
-        <div className={`${currentGradient} rounded-3xl p-8 shadow-2xl transition-all duration-500`}>
-          <h2 className="text-xl font-bold text-white mb-8">
+        {/* Question Card with Gradient Background - Question ONLY */}
+        <div className={`${currentGradient} rounded-3xl p-8 mb-6 shadow-2xl transition-all duration-500`}>
+          <p className="text-sm font-bold text-white/80 mb-4">
+            LEVEL {currentQuestion + 1} ({currentQuestion + 1}/{questions.length})
+          </p>
+          <h2 className="text-2xl font-bold text-white">
             {currentQ.question}
           </h2>
-
-          <QuestionCard
-            key={currentQ.id}
-            question={currentQ.question}
-            options={currentQ.options}
-            onAnswer={handleAnswer}
-            disabled={isAnswering}
-            correctIndex={selectedAnswer !== null ? currentQ.correctIndex : undefined}
-            selectedIndex={selectedAnswer?.index ?? null}
-          />
         </div>
+
+        {/* Answer Options - OUTSIDE gradient card, on white background */}
+        <QuestionCard
+          key={currentQ.id}
+          question={currentQ.question}
+          options={currentQ.options}
+          onAnswer={handleAnswer}
+          disabled={isAnswering}
+          correctIndex={selectedAnswer !== null ? currentQ.correctIndex : undefined}
+          selectedIndex={selectedAnswer?.index ?? null}
+        />
       </div>
     </PageContainer>
   );

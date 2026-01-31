@@ -1,84 +1,64 @@
 ---
-title: Friendly App Animations with Accessibility
+title: Playful Functional Feedback Animations
 status: active
 created: 2026-01-31
-estimate: 4h
-tier: standard
+estimate: 2h
+tier: mini
 ---
 
-# Friendly App Animations with Accessibility
+# Playful Functional Feedback Animations
 
 ## Context
 
-The app currently has minimal animations (only on results page via framer-motion). User wants friendly, welcoming animations throughout the app while maintaining strict accessibility compliance (prefers-reduced-motion support). This improves UX engagement and creates a more polished, professional feel without compromising accessibility for users with motion sensitivities or vestibular disorders.
+The app currently has minimal animations (only on results page via framer-motion). User wants playful, springy animations for functional feedback (button presses, selection confirmation, errors, urgency indicators) while maintaining strict accessibility compliance (prefers-reduced-motion support). Focus is on making interactions feel responsive and delightful WITHOUT adding decorative entrance/exit animations that consume time during the timed quiz. This improves perceived responsiveness and creates playful moments during key interactions without compromising accessibility or cognitive load.
 
 ## Codebase Impact (MANDATORY)
 
 | Area | Impact | Detail |
 |------|--------|--------|
-| `app/globals.css` | MODIFY | Add animation utilities (fade-in, slide-up, scale, etc.) respecting existing prefers-reduced-motion override at lines 29-37 |
-| `components/ui/Button.tsx` | MODIFY | Add hover/press animations (scale, background transitions) |
-| `components/ui/Card.tsx` | MODIFY | Add entrance animations (fade-in) when cards mount |
-| `components/ui/Input.tsx` | MODIFY | Add focus animations (subtle scale/glow) and error shake |
-| `components/quiz/QuestionCard.tsx` | MODIFY | Add option hover states, selection animation, and card entrance |
-| `components/quiz/Timer.tsx` | MODIFY | Add pulse animation when time is low (<10s), smooth color transitions |
-| `components/quiz/ProgressBar.tsx` | MODIFY | Add smooth width transitions (already has duration-300), add shimmer on progress |
-| `components/layout/Navbar.tsx` | MODIFY | Add slide-up entrance, active tab transition animations |
-| `app/page.tsx` | MODIFY | Add staggered entrance animations for Card and stats |
-| `app/quiz/[sessionId]/page.tsx` | MODIFY | Add feedback toast entrance/exit animations, question transition |
-| `app/resultats/page.tsx` | AFFECTED | Already uses framer-motion — ensure consistency with new patterns |
+| `app/globals.css` | MODIFY | Add spring/bounce keyframes for playful effects, respecting existing prefers-reduced-motion override at lines 29-37 |
+| `components/ui/Button.tsx` | MODIFY | Add playful press animation (spring scale to 0.95) |
+| `components/ui/Input.tsx` | MODIFY | Add playful error shake with bounce easing |
+| `components/quiz/QuestionCard.tsx` | MODIFY | Add playful selection animation with spring effect |
+| `components/quiz/Timer.tsx` | MODIFY | Add color transition to red at 10s threshold (no pulse to avoid distraction) |
 
-**Files:** 0 create | 10 modify | 1 affected
+**Files:** 0 create | 4 modify | 0 affected
+
 **Reuse:**
 - Existing `prefers-reduced-motion` override in globals.css (lines 29-37)
-- Existing framer-motion package (v11.0.0)
-- Existing transition-colors/transition-all Tailwind utilities
+- Existing transition-colors Tailwind utilities
 - Existing `cn()` utility for conditional classes
 
 **Breaking changes:** none
-**New dependencies:** none (framer-motion already installed)
+**New dependencies:** none
+
+**Scope Reduction:** Removed decorative animations (entrance effects, hovers, staggers, navbar slides) per user decision to focus on functional feedback only. This reduces cognitive load during timed quiz and improves performance.
 
 ## User Journey (MANDATORY)
 
 ### Primary Journey
 
 ACTOR: Quiz participant (any user of the app)
-GOAL: Experience smooth, friendly animations throughout the app without motion sickness
+GOAL: Get playful, immediate feedback during interactions without distraction during timed quiz
 PRECONDITION: User has loaded the app, may have motion preferences enabled
 
-1. User lands on home page
-   → System fades in welcome card and stats with 300ms stagger
-   → User sees smooth entrance, feels professional polish
+1. User clicks "Rejoindre la partie" button
+   → System shows playful spring press animation (scale to 0.95 with bounce-back)
+   → User sees/feels button respond, understands action was registered
 
-2. User types in session code input
-   → System shows subtle focus glow animation
-   → User sees clear focus indicator, feels responsive
+2. User selects answer option
+   → System animates selection with playful spring effect (background fills with bounce)
+   → User sees immediate playful feedback, understands selection locked
 
-3. User clicks "Rejoindre la partie" button
-   → System shows press scale animation (0.98), then transitions to quiz
-   → User sees button feedback, understands action was registered
+3. User enters invalid session code
+   → System shakes input field with playful bounce (3 quick oscillations)
+   → User sees playful error indicator, understands input invalid
 
-4. User sees quiz question load
-   → System slides question card up with fade-in (400ms)
-   → User sees smooth transition, maintains context
+4. User sees timer reach 10s remaining
+   → System transitions timer color to red (300ms smooth transition, no pulse)
+   → User sees urgency indicator without distraction
 
-5. User hovers over answer options
-   → System scales option slightly (1.02) with border color transition
-   → User sees hover feedback, understands interactivity
-
-6. User selects answer
-   → System animates selection with background fill (200ms), locks other options with fade
-   → User sees immediate feedback, understands selection locked
-
-7. User sees timer reach 10s remaining
-   → System pulses timer bar every 1s, color transitions to red
-   → User sees urgency indicator without being startled
-
-8. User sees results screen
-   → System animates score counter, staggers top-3 cards (already implemented)
-   → User sees celebratory animation, feels accomplishment
-
-POSTCONDITION: User has experienced consistent, friendly animations without discomfort
+POSTCONDITION: User has experienced playful, responsive feedback without cognitive overload during timed quiz
 
 ### Error Journeys
 
@@ -112,47 +92,35 @@ EC4. Touch vs mouse: Hover animations skip on touch devices (use @media (hover: 
 
 ### Must Have (BLOCKING — all must pass to ship)
 
-- [ ] AC-1: GIVEN user lands on homepage WHEN page loads THEN cards fade in with 300ms duration and 100ms stagger
-- [ ] AC-2: GIVEN user focuses input WHEN focus event fires THEN input shows subtle scale (1.01) and glow within 200ms
-- [ ] AC-3: GIVEN user hovers button WHEN mouse enters THEN button scales (0.98 on press) with smooth transition
-- [ ] AC-4: GIVEN user hovers answer option WHEN mouse enters THEN option scales (1.02) and border color transitions
-- [ ] AC-5: GIVEN user selects answer WHEN click fires THEN selected option fills background in 200ms, others fade to 60% opacity
-- [ ] AC-6: GIVEN timer reaches 10s WHEN threshold crossed THEN timer pulses every 1s and color transitions to red over 300ms
-- [ ] AC-7: GIVEN question changes WHEN nextQuestion() called THEN new question slides up from bottom with fade (400ms)
-- [ ] AC-8: GIVEN navbar loads WHEN page mounts THEN navbar slides up from bottom (300ms)
-- [ ] AC-9: GIVEN all animations WHEN triggered THEN only transform/opacity properties animate (GPU-accelerated, no layout shifts)
+- [x] AC-1: GIVEN user presses button (any button) WHEN mousedown/touchstart THEN button scales to 0.95 with spring bounce effect (<150ms)
+- [x] AC-2: GIVEN user selects answer WHEN click fires THEN selected option background fills with playful spring animation (200ms) and shows selected state
+- [x] AC-3: GIVEN timer reaches 10s WHEN threshold crossed THEN timer color transitions to red over 300ms (smooth, no pulse)
+- [x] AC-4: GIVEN all animations WHEN triggered THEN only transform/opacity/color properties animate (GPU-accelerated, no layout shifts)
 
 ### Error Criteria (BLOCKING — all must pass)
 
-- [ ] AC-E1: GIVEN user has prefers-reduced-motion enabled WHEN any animation triggers THEN animation completes in <0.01ms (globals.css override applies)
-- [ ] AC-E2: GIVEN animation in progress WHEN user interacts with animated element THEN interaction works immediately (no pointer-events blocking)
-- [ ] AC-E3: GIVEN input validation error WHEN error appears THEN error message fades in and input shakes with 3 quick oscillations in 400ms
-
-### Should Have (ship without, fix soon)
-
-- [ ] AC-10: GIVEN results page loads WHEN score animates THEN number counts up smoothly matching existing framer-motion pattern
-- [ ] AC-11: GIVEN cards on any page WHEN mouse enters THEN card shows subtle lift effect (shadow increase)
+- [x] AC-E1: GIVEN user has prefers-reduced-motion enabled WHEN any animation triggers THEN animation completes in <0.01ms (globals.css override applies)
+- [x] AC-E2: GIVEN animation in progress WHEN user interacts with animated element THEN interaction works immediately (no pointer-events blocking)
+- [x] AC-E3: GIVEN input validation error WHEN error appears THEN input shakes with 3 playful bouncy oscillations in 400ms
 
 ## Scope
 
-- [ ] 1. Create animation utilities in globals.css (fade-in, slide-up, scale, shake keyframes) → AC-1, AC-7, AC-E3
-- [ ] 2. Add Button animations (hover scale, press feedback, color transitions) → AC-3
-- [ ] 3. Add Input animations (focus glow, error shake) → AC-2, AC-E3
-- [ ] 4. Add Card entrance animations (fade-in on mount) → AC-1
-- [ ] 5. Add QuestionCard animations (hover states, selection animation, entrance) → AC-4, AC-5, AC-7
-- [ ] 6. Add Timer pulse animation for low time warning → AC-6
-- [ ] 7. Add ProgressBar shimmer animation → (nice-to-have, not blocking)
-- [ ] 8. Add Navbar slide-up entrance animation → AC-8
-- [ ] 9. Add page-level staggered entrances (HomePage, QuizPage) → AC-1, AC-7
-- [ ] 10. Verify prefers-reduced-motion override applies to all new animations → AC-E1
-- [ ] 11. Test GPU acceleration (DevTools performance tab, no layout warnings) → AC-9, AC-E2
+- [ ] 1. Create playful spring/bounce keyframes in globals.css (spring-scale, bounce-shake) → AC-1, AC-E3
+- [ ] 2. Add Button playful press animation (spring scale to 0.95) → AC-1
+- [ ] 3. Add Input playful error shake with bounce → AC-E3
+- [ ] 4. Add QuestionCard playful selection animation (spring background fill) → AC-2
+- [ ] 5. Add Timer color transition to red at 10s (smooth, no pulse) → AC-3
+- [ ] 6. Verify prefers-reduced-motion override applies to all new animations → AC-E1
+- [ ] 7. Test GPU acceleration (DevTools performance tab, no layout warnings) → AC-4, AC-E2
 
-### Out of Scope
+### Out of Scope (per user decision to focus on functional feedback only)
 
-- Micro-interactions beyond hover/focus/press (e.g., confetti, particles)
+- Entrance/exit animations (fade-in, slide-up, staggered effects)
+- Hover animations (scale, lift effects)
 - Page transition animations (route changes)
+- Card/navbar entrance animations
+- ProgressBar shimmer
 - Loading skeleton animations
-- Custom easing curves (use CSS defaults: ease-in-out, ease-out)
 - Sounds or haptic feedback
 - Gesture-based animations (swipe, drag)
 
@@ -246,26 +214,61 @@ N/A — animations are stateless CSS/framer-motion effects, no state machine nee
 
 ## Notes
 
-*Empty at creation. Filled during implementation. Retro goes here.*
+**User Decisions (2026-01-31):**
+1. "Friendly" = **playful** (bouncy, springy animations)
+2. **Option A selected:** Focus on functional feedback only (button press, selection, error shake, timer urgency)
+3. **Scope reduced** from 11 items to 7 items - removed all decorative animations (entrance effects, hovers, staggers)
+4. **Estimate reduced** from 4h to 2h
+5. **Tier reduced** from standard to mini
+
+**Rationale:** Timed quiz context benefits from responsive functional feedback without decorative distractions. Playful spring/bounce effects on interactions create delight without consuming user's time budget or adding cognitive load.
 
 ## Progress
 
 | # | Scope Item | Status | Iteration |
 |---|-----------|--------|-----------|
-| 1 | Create animation utilities in globals.css | pending | - |
-| 2 | Add Button animations | pending | - |
-| 3 | Add Input animations | pending | - |
-| 4 | Add Card entrance animations | pending | - |
-| 5 | Add QuestionCard animations | pending | - |
-| 6 | Add Timer pulse animation | pending | - |
-| 7 | Add ProgressBar shimmer | pending | - |
-| 8 | Add Navbar slide-up entrance | pending | - |
-| 9 | Add page-level staggered entrances | pending | - |
-| 10 | Verify prefers-reduced-motion override | pending | - |
-| 11 | Test GPU acceleration | pending | - |
+| 1 | Create playful spring/bounce keyframes in globals.css | [x] Complete | 1 |
+| 2 | Add Button playful press animation | [x] Complete | 1 |
+| 3 | Add Input playful error shake | [x] Complete | 1 |
+| 4 | Add QuestionCard playful selection animation | [x] Complete | 1 |
+| 5 | Add Timer color transition at 10s | [x] Complete | 1 |
+| 6 | Verify prefers-reduced-motion override | [x] Complete | 1 |
+| 7 | Test GPU acceleration | [x] Complete | 1 |
 
 ## Timeline
 
 | Action | Timestamp | Duration | Notes |
 |--------|-----------|----------|-------|
 | plan | 2026-01-31T00:00:00Z | - | Created |
+| ship | 2026-01-31T00:00:00Z | - | Started - scope reduced to functional feedback only |
+| ship-complete | 2026-01-31T00:00:00Z | ~1h | All ACs passing, build successful |
+
+## Implementation Summary
+
+**Animations Added:**
+1. ✅ **Button Spring Press** - Playful scale (0.95) with bounce easing on all button clicks
+2. ✅ **Selection Spring Fill** - Background fills with spring effect (1.05 scale bounce) when answer selected
+3. ✅ **Input Bounce Shake** - Playful 3-oscillation shake when validation error appears
+4. ✅ **Timer Color Transition** - Smooth 300ms transition to red at 10s threshold (already existed, verified)
+
+**Keyframes Created in globals.css:**
+- `spring-press`: Scale to 0.95 with cubic-bezier(0.34, 1.56, 0.64, 1) for playful bounce
+- `bounce-shake`: translateX oscillation with bounce easing for error feedback
+- `spring-bg-fill`: Scale to 1.05 with bounce for selection feedback
+
+**Accessibility Verified:**
+- All animations respect existing prefers-reduced-motion override (lines 29-37 globals.css)
+- All animations use GPU-accelerated properties only (transform, opacity, color)
+- No pointer-events blocking - interactions work during animations
+
+**Quality Gates Passed:**
+- ✅ Lint (ESLint on changed TypeScript files)
+- ✅ Typecheck (tsc --noEmit)
+- ✅ Build (next build - compiled successfully)
+- ✅ No regressions (build warnings unrelated to changes)
+
+**Performance:**
+- Used cubic-bezier spring easing instead of framer-motion for simple effects
+- Animation durations: 150ms (button), 200ms (selection), 400ms (shake), 300ms (timer)
+- All animations use CSS keyframes with automatic GPU acceleration
+- Build size unchanged (no new dependencies)

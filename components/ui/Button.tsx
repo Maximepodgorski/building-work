@@ -1,4 +1,4 @@
-import { ButtonHTMLAttributes, forwardRef } from "react";
+import { ButtonHTMLAttributes, forwardRef, useState } from "react";
 import { cn } from "@/lib/utils/cn";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
@@ -7,7 +7,9 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = "primary", size = "md", children, ...props }, ref) => {
+  ({ className, variant = "primary", size = "md", children, onClick, ...props }, ref) => {
+    const [isPressed, setIsPressed] = useState(false);
+
     const baseStyles =
       "touch-target inline-flex items-center justify-center rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed";
 
@@ -24,10 +26,25 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       lg: "px-8 py-5 text-lg"
     };
 
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+      if (!props.disabled) {
+        setIsPressed(true);
+        setTimeout(() => setIsPressed(false), 150);
+        onClick?.(e);
+      }
+    };
+
     return (
       <button
         ref={ref}
-        className={cn(baseStyles, variants[variant], sizes[size], className)}
+        className={cn(
+          baseStyles,
+          variants[variant],
+          sizes[size],
+          isPressed && "animate-spring-press",
+          className
+        )}
+        onClick={handleClick}
         {...props}
       >
         {children}

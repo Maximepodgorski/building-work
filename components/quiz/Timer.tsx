@@ -59,7 +59,7 @@ export default function Timer({ duration, onExpire, startTime }: TimerProps) {
   };
 
   return (
-    <div className="w-full bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-md">
+    <div className="w-full bg-white rounded-xl p-3 shadow-sm border border-gray-200">
       <div className="flex justify-between items-center mb-2">
         <span className="text-sm font-semibold text-gray-600">Temps restant</span>
         <span
@@ -70,7 +70,7 @@ export default function Timer({ duration, onExpire, startTime }: TimerProps) {
         </span>
       </div>
 
-      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+      <div className="w-full h-3 bg-gray-100 rounded-full overflow-hidden">
         <div
           className={`h-full transition-all duration-300 ${getBarColor()}`}
           style={{ width: `${percentage}%` }}

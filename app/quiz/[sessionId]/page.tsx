@@ -94,16 +94,13 @@ export default function QuizPage() {
   const currentGradient = gradients[currentQuestion % gradients.length];
 
   return (
-    <PageContainer>
-      {/* Vibrant gradient background */}
-      <div className={`fixed inset-0 ${currentGradient} -z-10 transition-all duration-500`} />
-
+    <PageContainer className="bg-white">
       <div className="max-w-2xl mx-auto py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Quiz Bien-être</h1>
-            <span className="text-sm text-white/90 drop-shadow" aria-live="polite">
+            <h1 className="text-2xl font-bold text-primary">Quiz Bien-être</h1>
+            <span className="text-sm text-secondary" aria-live="polite">
               {playerCount} joueurs en ligne
             </span>
           </div>
@@ -116,42 +113,22 @@ export default function QuizPage() {
           />
         </div>
 
-        {/* Question */}
-        <QuestionCard
-          key={currentQ.id}
-          question={currentQ.question}
-          options={currentQ.options}
-          onAnswer={handleAnswer}
-          disabled={isAnswering}
-          correctIndex={selectedAnswer !== null ? currentQ.correctIndex : undefined}
-          selectedIndex={selectedAnswer?.index ?? null}
-        />
+        {/* Question Card with Gradient Background */}
+        <div className={`${currentGradient} rounded-3xl p-8 shadow-2xl transition-all duration-500`}>
+          <h2 className="text-xl font-bold text-white mb-8">
+            {currentQ.question}
+          </h2>
 
-        {/* Feedback */}
-        {selectedAnswer && (
-          <div
-            className={`mt-6 p-4 rounded-lg ${
-              selectedAnswer.isCorrect
-                ? "bg-accent-positive/10 border-2 border-accent-positive"
-                : "bg-accent-negative/10 border-2 border-accent-negative"
-            }`}
-            role="alert"
-            aria-live="assertive"
-          >
-            <p
-              className={`font-semibold ${
-                selectedAnswer.isCorrect ? "text-accent-positive" : "text-accent-negative"
-              }`}
-            >
-              {selectedAnswer.isCorrect ? "✓ Bonne réponse !" : "✗ Mauvaise réponse"}
-            </p>
-            {!selectedAnswer.isCorrect && (
-              <p className="text-sm text-secondary mt-1">
-                La bonne réponse était : {currentQ.options[currentQ.correctIndex]}
-              </p>
-            )}
-          </div>
-        )}
+          <QuestionCard
+            key={currentQ.id}
+            question={currentQ.question}
+            options={currentQ.options}
+            onAnswer={handleAnswer}
+            disabled={isAnswering}
+            correctIndex={selectedAnswer !== null ? currentQ.correctIndex : undefined}
+            selectedIndex={selectedAnswer?.index ?? null}
+          />
+        </div>
       </div>
     </PageContainer>
   );

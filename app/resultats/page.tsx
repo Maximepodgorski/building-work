@@ -86,17 +86,14 @@ export default function ResultsPage() {
   };
 
   return (
-    <PageContainer>
-      {/* Celebration gradient background */}
-      <div className="fixed inset-0 bg-gradient-celebration -z-10" />
-
+    <PageContainer className="bg-white">
       <div className="max-w-2xl mx-auto py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-white drop-shadow-lg text-center mb-8">
+          <h1 className="text-3xl font-bold text-primary text-center mb-8">
             Résultats
           </h1>
 

@@ -1,4 +1,4 @@
-import { InputHTMLAttributes, forwardRef, useId } from "react";
+import { InputHTMLAttributes, forwardRef, useId, useState, useEffect } from "react";
 import { cn } from "@/lib/utils/cn";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
@@ -10,6 +10,17 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ className, label, error, id, ...props }, ref) => {
     const generatedId = useId();
     const inputId = id || generatedId;
+    const [isShaking, setIsShaking] = useState(false);
+    const [prevError, setPrevError] = useState(error);
+
+    // Trigger shake animation when error appears
+    useEffect(() => {
+      if (error && error !== prevError) {
+        setIsShaking(true);
+        setTimeout(() => setIsShaking(false), 400);
+      }
+      setPrevError(error);
+    }, [error, prevError]);
 
     return (
       <div className="w-full">
@@ -31,6 +42,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             error
               ? "border-accent-negative focus:border-accent-negative"
               : "border-gray-300 focus:border-primary",
+            isShaking && "animate-bounce-shake",
             className
           )}
           aria-invalid={error ? "true" : "false"}

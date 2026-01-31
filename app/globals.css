@@ -81,4 +81,59 @@
     .bg-gradient-pink-purple { @apply bg-vibrant-pink; }
     .bg-gradient-celebration { @apply bg-vibrant-purple; }
   }
+
+  /* Playful spring/bounce animations for functional feedback */
+  @keyframes spring-press {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(0.95);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes bounce-shake {
+    0%, 100% {
+      transform: translateX(0);
+    }
+    25% {
+      transform: translateX(-8px);
+    }
+    50% {
+      transform: translateX(8px);
+    }
+    75% {
+      transform: translateX(-4px);
+    }
+  }
+
+  @keyframes spring-bg-fill {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .animate-spring-press {
+    animation: spring-press 150ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .animate-bounce-shake {
+    animation: bounce-shake 400ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .animate-spring-fill {
+    animation: spring-bg-fill 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
 }

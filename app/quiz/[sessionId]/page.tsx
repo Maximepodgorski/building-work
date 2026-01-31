@@ -1,7 +1,7 @@
 "use client";
 
-import { use, useEffect, useState, useCallback, useRef } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState, useCallback, useRef } from "react";
+import { useRouter, useParams } from "next/navigation";
 import PageContainer from "@/components/layout/PageContainer";
 import QuestionCard from "@/components/quiz/QuestionCard";
 import Timer from "@/components/quiz/Timer";
@@ -13,8 +13,9 @@ import { getSessionByCode } from "@/lib/data/sessions";
 const TIMER_DURATION = 30; // seconds per question
 const AUTO_ADVANCE_DELAY = 2000; // 2 seconds
 
-export default function QuizPage({ params }: { params: Promise<{ sessionId: string }> }) {
-  const { sessionId } = use(params);
+export default function QuizPage() {
+  const params = useParams();
+  const sessionId = params?.sessionId as string;
   const router = useRouter();
   const [playerCount, setPlayerCount] = useState(0);
   const [questionStartTime, setQuestionStartTime] = useState(Date.now());

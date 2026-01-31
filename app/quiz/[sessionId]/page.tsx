@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useEffect, useState } from "react";
+import { use, useEffect, useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import PageContainer from "@/components/layout/PageContainer";
 import QuestionCard from "@/components/quiz/QuestionCard";
@@ -22,6 +22,7 @@ export default function QuizPage({ params }: { params: Promise<{ sessionId: stri
     index: number;
     isCorrect: boolean;
   } | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { currentQuestion, score, isAnswering, answerQuestion, nextQuestion } = useGameStore();
   const questions = getQuestions();
@@ -42,16 +43,26 @@ export default function QuizPage({ params }: { params: Promise<{ sessionId: stri
     // Reset question start time when moving to next question
     setQuestionStartTime(Date.now());
     setSelectedAnswer(null);
+
+    // Cleanup any pending timeouts when question changes
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
   }, [currentQuestion]);
 
-  const handleAnswer = (selectedIndex: number) => {
+  const handleAnswer = useCallback((selectedIndex: number) => {
+    // Prevent race condition if already answered
+    if (selectedAnswer !== null) return;
+
     const isCorrect = selectedIndex === currentQ.correctIndex;
     setSelectedAnswer({ index: selectedIndex, isCorrect });
 
     answerQuestion(currentQ.id, selectedIndex, currentQ.correctIndex);
 
     // Auto-advance after delay
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
         nextQuestion();
       } else {
@@ -59,22 +70,23 @@ export default function QuizPage({ params }: { params: Promise<{ sessionId: stri
         router.push("/resultats");
       }
     }, AUTO_ADVANCE_DELAY);
-  };
+  }, [selectedAnswer, currentQ, answerQuestion, currentQuestion, questions.length, nextQuestion, router]);
 
-  const handleTimerExpire = () => {
-    if (isAnswering) return; // Already answered
+  const handleTimerExpire = useCallback(() => {
+    if (isAnswering || selectedAnswer !== null) return; // Already answered
 
     // Auto-select no answer (mark as incorrect)
     answerQuestion(currentQ.id, -1, currentQ.correctIndex);
+    setSelectedAnswer({ index: -1, isCorrect: false });
 
-    setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       if (currentQuestion < questions.length - 1) {
         nextQuestion();
       } else {
         router.push("/resultats");
       }
     }, AUTO_ADVANCE_DELAY);
-  };
+  }, [isAnswering, selectedAnswer, answerQuestion, currentQ, currentQuestion, questions.length, nextQuestion, router]);
 
   if (!currentQ) {
     return null;

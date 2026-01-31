@@ -1,3 +1,5 @@
+"use client";
+
 // Simple input sanitization for feedback comments
 // Prevents XSS by escaping HTML entities
 

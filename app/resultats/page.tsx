@@ -29,12 +29,16 @@ export default function ResultsPage() {
     }
 
     // Save score to localStorage
-    saveScore({
+    const saved = saveScore({
       sessionId,
       score,
       totalQuestions,
       timestamp: new Date().toISOString()
     });
+
+    if (!saved) {
+      console.warn("Failed to save score to localStorage (quota may be exceeded)");
+    }
 
     // Generate mock rankings (top 10 players + user)
     const mockRankings: PlayerWithUser[] = MOCK_PLAYERS.slice(0, 9).map((p) => ({ ...p }));

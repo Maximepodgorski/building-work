@@ -82,6 +82,7 @@ export default function HomePage() {
 
             <Button
               type="submit"
+              variant="gamified"
               className="w-full"
               disabled={isValidating}
               aria-busy={isValidating}

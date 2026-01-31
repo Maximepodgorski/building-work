@@ -42,4 +42,43 @@
   .touch-target {
     @apply min-h-touch min-w-touch;
   }
+
+  /* Gamified button animations */
+  .btn-gamified {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  .btn-gamified:hover:not(:disabled) {
+    @apply scale-105 shadow-lg;
+  }
+
+  .btn-gamified:active:not(:disabled) {
+    @apply scale-95;
+  }
+
+  /* Answer option states */
+  .answer-option {
+    @apply transition-all duration-200;
+  }
+
+  .answer-option-selected-correct {
+    @apply bg-vibrant-green text-white border-vibrant-green scale-105;
+  }
+
+  .answer-option-selected-incorrect {
+    @apply border-vibrant-red;
+  }
+
+  .answer-option-correct-answer {
+    @apply bg-vibrant-green/10 border-vibrant-green;
+  }
+
+  /* Gradient fallbacks - browsers that don't support gradients will use solid colors */
+  @supports not (background: linear-gradient(135deg, #7C3AED 0%, #3B82F6 100%)) {
+    .bg-gradient-purple-blue { @apply bg-vibrant-purple; }
+    .bg-gradient-orange-red { @apply bg-vibrant-orange; }
+    .bg-gradient-green-teal { @apply bg-vibrant-green; }
+    .bg-gradient-pink-purple { @apply bg-vibrant-pink; }
+    .bg-gradient-celebration { @apply bg-vibrant-purple; }
+  }
 }

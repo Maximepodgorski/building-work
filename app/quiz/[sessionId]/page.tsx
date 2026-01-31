@@ -84,14 +84,26 @@ export default function QuizPage() {
     return null;
   }
 
+  // Gradient background rotates based on question number
+  const gradients = [
+    "bg-gradient-purple-blue",
+    "bg-gradient-orange-red",
+    "bg-gradient-green-teal",
+    "bg-gradient-pink-purple",
+  ];
+  const currentGradient = gradients[currentQuestion % gradients.length];
+
   return (
     <PageContainer>
+      {/* Vibrant gradient background */}
+      <div className={`fixed inset-0 ${currentGradient} -z-10 transition-all duration-500`} />
+
       <div className="max-w-2xl mx-auto py-6">
         {/* Header */}
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold text-primary">Quiz Bien-être</h1>
-            <span className="text-sm text-secondary" aria-live="polite">
+            <h1 className="text-2xl font-bold text-white drop-shadow-lg">Quiz Bien-être</h1>
+            <span className="text-sm text-white/90 drop-shadow" aria-live="polite">
               {playerCount} joueurs en ligne
             </span>
           </div>
@@ -111,6 +123,8 @@ export default function QuizPage() {
           options={currentQ.options}
           onAnswer={handleAnswer}
           disabled={isAnswering}
+          correctIndex={selectedAnswer !== null ? currentQ.correctIndex : undefined}
+          selectedIndex={selectedAnswer?.index ?? null}
         />
 
         {/* Feedback */}

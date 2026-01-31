@@ -87,23 +87,26 @@ export default function ResultsPage() {
 
   return (
     <PageContainer>
+      {/* Celebration gradient background */}
+      <div className="fixed inset-0 bg-gradient-celebration -z-10" />
+
       <div className="max-w-2xl mx-auto py-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: shouldReduceMotion ? 0 : 0.5 }}
         >
-          <h1 className="text-3xl font-bold text-primary text-center mb-8">
+          <h1 className="text-3xl font-bold text-white drop-shadow-lg text-center mb-8">
             Résultats
           </h1>
 
           {/* Score */}
-          <Card variant="elevated" className="mb-6 text-center">
-            <p className="text-secondary mb-2">Votre score</p>
-            <p className="text-6xl font-bold text-primary mb-2" aria-live="polite">
+          <Card variant="elevated" className="mb-6 text-center bg-white shadow-2xl">
+            <p className="text-gray-600 mb-2">Votre score</p>
+            <p className="text-7xl font-bold text-vibrant-purple mb-2" aria-live="polite">
               {displayScore}/{totalQuestions}
             </p>
-            <p className="text-secondary">
+            <p className="text-gray-600 text-lg">
               {Math.round((score / totalQuestions) * 100)}% de réponses correctes
             </p>
           </Card>
@@ -160,7 +163,7 @@ export default function ResultsPage() {
             </div>
           </Card>
 
-          <Button onClick={handleContinue} className="w-full">
+          <Button onClick={handleContinue} variant="gamified" className="w-full text-lg">
             Continuer
           </Button>
         </motion.div>

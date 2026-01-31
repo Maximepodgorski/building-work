@@ -42,25 +42,37 @@ export default function Timer({ duration, onExpire, startTime }: TimerProps) {
   }, [timeLeft, hasAnnounced10s, hasAnnounced5s]);
 
   const percentage = (timeLeft / duration) * 100;
-  const isLow = timeLeft <= 5;
+
+  // Gamified color states
+  const getTimerColor = () => {
+    if (timeLeft <= 5) return "text-vibrant-red";
+    if (timeLeft <= 10) return "text-vibrant-orange";
+    if (timeLeft <= 15) return "text-vibrant-yellow";
+    return "text-vibrant-green";
+  };
+
+  const getBarColor = () => {
+    if (timeLeft <= 5) return "bg-vibrant-red";
+    if (timeLeft <= 10) return "bg-vibrant-orange";
+    if (timeLeft <= 15) return "bg-vibrant-yellow";
+    return "bg-vibrant-green";
+  };
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white/90 backdrop-blur-sm rounded-xl p-3 shadow-md">
       <div className="flex justify-between items-center mb-2">
-        <span className="text-sm font-semibold text-secondary">Temps restant</span>
+        <span className="text-sm font-semibold text-gray-600">Temps restant</span>
         <span
-          className={`text-lg font-bold ${isLow ? "text-accent-negative" : "text-primary"}`}
+          className={`text-2xl font-bold ${getTimerColor()} transition-colors duration-300`}
           aria-live="polite"
         >
           {timeLeft}s
         </span>
       </div>
 
-      <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
         <div
-          className={`h-full transition-all duration-100 ${
-            isLow ? "bg-accent-negative" : "bg-primary"
-          }`}
+          className={`h-full transition-all duration-300 ${getBarColor()}`}
           style={{ width: `${percentage}%` }}
           role="progressbar"
           aria-valuenow={timeLeft}

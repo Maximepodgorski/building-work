@@ -85,17 +85,20 @@ export default function FeedbackPage() {
 
   return (
     <PageContainer>
+      {/* Vibrant gradient background */}
+      <div className="fixed inset-0 bg-gradient-pink-purple -z-10" />
+
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
         className="max-w-2xl mx-auto py-6"
       >
-        <h1 className="text-2xl font-bold text-primary mb-6 text-center">
+        <h1 className="text-2xl font-bold text-white drop-shadow-lg mb-6 text-center">
           Comment vous sentez-vous au travail aujourd&apos;hui ?
         </h1>
 
-        <Card variant="elevated">
+        <Card variant="elevated" className="bg-white shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Emoji Scale */}
             <div>
@@ -169,6 +172,7 @@ export default function FeedbackPage() {
               </Button>
               <Button
                 type="submit"
+                variant="gamified"
                 className="flex-1"
                 disabled={isSubmitting}
                 aria-busy={isSubmitting}
